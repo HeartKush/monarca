@@ -1,0 +1,56 @@
+---
+import Switch from "./react/Switch";
+import ThemeToggle from "./ThemeToggle.astro"
+---
+
+<header class="py-2 flex items-center top-0 w-5/6 mx-auto justify-between">
+  <a
+    href="#"
+    class="flex flex-grow basis-0 text-3xl font-bold tracking-tight from-[#FF1CF7] to-[#b249f8] bg-clip-text text-transparent bg-gradient-to-b"
+    >UX/UI</a
+  >
+
+  <nav class="hidden md:flex">
+    <ul class="flex text-slate-200 font-semibold ease-in-out">
+      <li class="px-4 py-1 hover:text-fuchsia-600 text-xl"><a href="">Home</a></li>
+      <li class="px-4 py-1 hover:text-fuchsia-600 text-xl"><a href="">About</a></li>
+      <li class="px-4 py-1 hover:text-fuchsia-600 text-xl"><a href="">Skills</a></li>
+      <li class="px-4 py-1 hover:text-fuchsia-600 text-xl"><a href="">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="ps-4">
+    <Switch client:load />
+  </div>
+  <div
+    id="menu-backdrop"
+    class="absolute bg-slate-200 backdrop-blur-lg rounded-large left-[var(--left)]
+    top-[var(--top)] w-[var(--width)] h-[var(--height)]
+    transition-all duration-300 ease-in-out opacity-0 -z-10"
+  >
+  </div>
+</header>
+<script>
+  const listItem = document.querySelectorAll("li");
+  const menuBackDrop = document.querySelector("#menu-backdrop") as HTMLElement;
+
+  listItem.forEach((item) => {
+    item.addEventListener("mouseenter", () => {
+      const { left, top, width, height } = item.getBoundingClientRect();
+
+      menuBackDrop.style.setProperty("--left", `${left}px`);
+      menuBackDrop.style.setProperty("--top", `${top}px`);
+      menuBackDrop.style.setProperty("--width", `${width}px`);
+      menuBackDrop.style.setProperty("--height", `${height}px`);
+
+      menuBackDrop.style.opacity = "1";
+      menuBackDrop.style.visibility = "visible";
+    });
+
+    item.addEventListener("mouseleave", () => {
+      menuBackDrop.style.opacity = "0";
+      menuBackDrop.style.visibility = "hidden";
+    });
+  });
+</script>
+
+

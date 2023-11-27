@@ -1,0 +1,20 @@
+---
+import ExampleReact from "../components/react/exampleReact";
+import Layout from "../layouts/Layout.astro";
+import { Button } from "@nextui-org/react";
+import Navbar from "../components/Navbar.astro";
+import HeroSection from "../components/HeroSection.astro";
+import Products from "../components/Products.astro";
+import Footer from "../components/Footer.astro"
+---
+
+<Layout title="El Monarca - Maestro de los Asados">
+  <main class="w-full">
+    <ExampleReact client:load />
+    <HeroSection />
+    <Products />
+    <Footer />
+  </main>
+
+</Layout>
+<style></style>

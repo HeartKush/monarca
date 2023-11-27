@@ -1,0 +1,69 @@
+---
+import { Image } from "astro:assets";
+import Iapp from "../../public/assets/images/lg-arte.svg";
+---
+
+<section
+  class="flex flex-col md:gap-10 lg:gap-16 xl:gap-24 lg:flex-row items-center justify-center 2xl:h-[calc(84vh_-_64px)]"
+>
+  <div
+    class="flex gap-7 px-4 text-white ms-0 lg:ms-64 xlflex justify-center flex-col h-[calc(100vh_-_320px)]"
+  >
+    <div>
+      <p
+        class="text-5xl text-yellow-500 font-semibold text-center lg:text-start"
+      >
+        Expertos en
+      </p>
+      <p class="text-6xl font-semibold text-center lg:text-start">
+        Embutidos <br />y Asados
+      </p>
+    </div>
+    <div class="flex cursor-pointer hover:translate-y-1 ease-in-out lg:hidden bg-white rounded-xl mt-4 px-4 py-4 gap-2">
+      <div>
+        <Image
+          src={Iapp}
+          width={400}
+          height={400}
+          alt="A bird."
+          class="rounded-3xl w-48 mx-auto px-4 flex"
+        />
+        <p class="text-black text-center text-xl">Longaniza Artesanal</p>
+      </div>
+      <p
+        class="bg-red-800 rounded-lg  text-white text-center px-4 flex-grow justify-center flex items-center text-2xl font-semibold"
+      >
+        Producto<br />Destacado
+      </p>
+    </div>
+    <button
+      class="bg-red-800 text-white rounded-lg w-48 text-xl py-2 mt-4 mx-auto lg:mx-0 hover:bg-red-700 hover:text-white"
+      >Ver mas</button
+    >
+  </div>
+
+  <div class="hidden lg:flex gap-2">
+    <div
+      class="flex justify-between cursor-pointer hover:translate-y-1 ease-in-out bg-white rounded-xl px-4 py-4 gap-2 flex-col h-[calc(100vh_-_390px)]"
+    >
+      <Image src={Iapp} alt="A bird." class="rounded-3xl w-80 mx-auto flex" />
+      <div
+        class="bg-red-800 rounded-lg  text-white text-center px-4 py-4 text-2xl font-semibold"
+      >
+        Producto<br />Destacado
+      </div>
+    </div>
+    <p class="product-name text-white text-3xl">Longaniza Artesanal</p>
+  </div>
+</section>
+<style>
+  section {
+    background: url("/assets/images/hero-bg.webp") no-repeat center center fixed;
+    background-size: cover;
+    height: 92vh;
+  }
+  .product-name {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+</style>

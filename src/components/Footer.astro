@@ -1,0 +1,60 @@
+---
+import { Image } from "astro:assets";
+import Facebook from "../../public/assets/icons/facebook.svg";
+import Instagram from "../../public/assets/icons/instagram.svg";
+import Whatsapp from "../../public/assets/icons/whatsapp.svg";
+---
+
+<footer>
+  <div class="flex flex-col md:flex-row gap-4 w-full bg-red-800 mt-10 px-10 py-4">
+    <div class="text-white flex-grow">
+      <p class="text-xl font-bold">Contactos</p>
+      <p>
+        <span class="font-bold">Email:</span> embutidosmonarca.cucuta@gmail.com
+      </p>
+      <p><span class="font-bold">Telefono:</span> 3193347893</p>
+      <p>
+        <span class="font-bold">Ubicacion:</span> CLL 6AN # 15AE-52 Ssn Eduardo
+        Apto 201
+      </p>
+    </div>
+    <div class="text-white flex flex-col gap-4 flex-grow">
+      <div>
+        <p class="text-xl font-bold">Horarios de atencion</p>
+        <p>Lunes a Domingo 7:00 AM - 8:00 PM</p>
+      </div>
+      <div class="flex justify-center md:justify-start">
+        <a href="https://www.instagram.com/elmonarca.co" target="_blank">
+          <Image
+            src={Instagram}
+            width={80}
+            height={80}
+            alt="A bird."
+            class="rounded-3xl px-4 flex"
+          /></a
+        >
+        <a href="https://wa.me/message/BEDMNENC5ZUNJ1" target="_blank">
+          <Image
+            src={Whatsapp}
+            width={80}
+            height={80}
+            alt="A bird."
+            class="rounded-3xl px-4 flex"
+          />
+        </a>
+        <a href="https://www.facebook.com/elmonarca.co" target="_blank" >
+          <Image
+            src={Facebook}
+            width={80}
+            height={80}
+            alt="A bird."
+            class="rounded-3xl px-4 flex"
+          />
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="full-w bg-gray-950 text-white text-center">
+    Copyright©2023 - El Monarca
+  </div>
+</footer>
