@@ -19,7 +19,7 @@ export default function CartModal({ items, onClose, onRemove }) {
   const totalLine = `%0A*Total:* COP ${total.toLocaleString()}`;
   const footer = "%0A%0A¡Muchas gracias! 🙌";
   const fullMessage = header + intro + bulletSection + totalLine + footer;
-  const whatsappLink = `https://wa.me/573193347803?text=${fullMessage}`;
+  const whatsappLink = `https://wa.me/573193347893?text=${fullMessage}`;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
