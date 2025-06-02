@@ -8,7 +8,8 @@ export default function ProductCards() {
     {
       id: "longaniza-artesanal",
       name: "Longaniza Artesanal",
-      description: "La mejor calidad y sabor para disfrutar en familia",
+      description:
+        "Embutido cárnico de lomo y pierna de cerdo, adobado con especias naturales y condimentos libre de conservantes artificiales. Producto con características de sabor ahumado y levemente picante, dándole un toque parrillero y perfecto para acompañar asados.",
       img: "/assets/images/longaniza.webp",
       variants: [
         { label: "10 und", price: 32000 },
@@ -18,7 +19,8 @@ export default function ProductCards() {
     {
       id: "chorizo-argentino",
       name: "Chorizo Argentino",
-      description: "Sabor auténtico argentino para tu asado",
+      description:
+        "Nuestro Chorizo Argentino captura la pasión y el sabor intenso de la parrilla argentina. Con la mezcla perfecta de carne de cerdo, tocino, especias, ají y condimentos, cada chorizo es una obra maestra de sabores audaces y auténticos. Descubre la tradición de la parrilla argentina en cada mordisco y deja que tu paladar viaje a las tierras del asado.",
       img: "/assets/images/argentino.webp",
       variants: [
         { label: "10 und", price: 32000 },
@@ -28,7 +30,8 @@ export default function ProductCards() {
     {
       id: "chorizo-antioqueno",
       name: "Chorizo Antioqueño",
-      description: "Receta típica antioqueña para chuparse los dedos",
+      description:
+        "Sumérgete en la deliciosa tradición con nuestro Chorizo Antioqueño. Elaborado con la calidad suprema de carne de cerdo, tocino, hierbas frescas, paprika, sal, y el toque distintivo del orégano, cada porción es una experiencia de sabor única. Disfruta de la autenticidad y la riqueza de nuestras raíces en cada bocado.",
       img: "/assets/images/antioqueno.jpg",
       variants: [
         { label: "10 und", price: 32000 },
@@ -37,63 +40,61 @@ export default function ProductCards() {
     },
   ];
 
-  // 2. Estado de cantidades: [ [qtyVar1, qtyVar2], [qtyVar1, qtyVar2], ... ]
+  // 2. Estado de cantidades: [[qtyVar1, qtyVar2], …]
   const [quantities, setQuantities] = useState(
     products.map(() => [0, 0])
   );
 
-  // 3. Carrito y control de modal
+  // 3. Estado para manejar descripciones expandidas
+  const [descExpanded, setDescExpanded] = useState(
+    products.map(() => false)
+  );
+
+  // 4. Carrito y control de modal
   const [cartItems, setCartItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 4. Sincroniza “quantities” con “cartItems”
+  // 5. Sincroniza cantidades al cerrar el modal
   const syncQuantitiesWithCart = () => {
     const newQuantities = products.map(() => [0, 0]);
     cartItems.forEach((ci) => {
-      const prodIndex = products.findIndex((p) => p.name === ci.name);
-      if (prodIndex === -1) return;
-      const varIndex = products[prodIndex].variants.findIndex(
+      const pi = products.findIndex((p) => p.name === ci.name);
+      const vi = products[pi].variants.findIndex(
         (v) => v.label === ci.variantLabel
       );
-      if (varIndex === -1) return;
-      newQuantities[prodIndex][varIndex] = ci.quantity;
+      if (pi !== -1 && vi !== -1) {
+        newQuantities[pi][vi] = ci.quantity;
+      }
     });
     setQuantities(newQuantities);
   };
 
-  // 5. Cierra el modal tras sincronizar cantidades
   const handleCloseModal = () => {
     syncQuantitiesWithCart();
     setIsModalOpen(false);
   };
 
-  // 6. Disminuir cantidad (no bajar de 0)
-  const handleDecrease = (prodIndex, varIndex) => {
-    const current = quantities[prodIndex][varIndex];
-    if (current > 0) {
-      const newQuantities = quantities.map((row) => [...row]);
-      newQuantities[prodIndex][varIndex] = current - 1;
-      setQuantities(newQuantities);
+  const handleDecrease = (pi, vi) => {
+    if (quantities[pi][vi] > 0) {
+      const copy = quantities.map((row) => [...row]);
+      copy[pi][vi]--;
+      setQuantities(copy);
     }
   };
 
-  // 7. Aumentar cantidad
-  const handleIncrease = (prodIndex, varIndex) => {
-    const newQuantities = quantities.map((row) => [...row]);
-    newQuantities[prodIndex][varIndex] =
-      newQuantities[prodIndex][varIndex] + 1;
-    setQuantities(newQuantities);
+  const handleIncrease = (pi, vi) => {
+    const copy = quantities.map((row) => [...row]);
+    copy[pi][vi]++;
+    setQuantities(copy);
   };
 
-  // 8. Agregar al carrito: reemplazar cantidad si ya existe
-  const handleAddToCart = (prodIndex) => {
-    const product = products[prodIndex];
-    const variantQuantities = quantities[prodIndex];
+  const handleAddToCart = (pi) => {
+    const product = products[pi];
+    const variantQs = quantities[pi];
 
-    // Preparamos la lista de variantes con qty > 0
     const toAdd = product.variants
-      .map((variant, varIndex) => {
-        const qty = variantQuantities[varIndex];
+      .map((variant, vi) => {
+        const qty = variantQs[vi];
         if (qty > 0) {
           return {
             name: product.name,
@@ -105,33 +106,26 @@ export default function ProductCards() {
         }
         return null;
       })
-      .filter((item) => item !== null);
+      .filter(Boolean);
 
     if (toAdd.length === 0) {
       alert("Debes elegir al menos una cantidad para agregar al pedido.");
       return;
     }
 
-    // Clonamos el carrito actual para mutar
-    const updatedCart = [...cartItems];
-
+    const updated = [...cartItems];
     toAdd.forEach((newItem) => {
-      // Buscar si ya existe el mismo producto + variante
-      const existingIndex = updatedCart.findIndex(
+      const existingIndex = updated.findIndex(
         (ci) =>
           ci.name === newItem.name &&
           ci.variantLabel === newItem.variantLabel
       );
-
       if (existingIndex > -1) {
-        // Reemplazamos la cantidad (no sumamos)
-        const existing = updatedCart[existingIndex];
-        existing.quantity = newItem.quantity;
-        existing.subTotal = existing.price * newItem.quantity;
-        updatedCart[existingIndex] = existing;
+        updated[existingIndex].quantity = newItem.quantity;
+        updated[existingIndex].subTotal =
+          newItem.price * newItem.quantity;
       } else {
-        // Si no existía, lo agregamos como nuevo ítem
-        updatedCart.push({
+        updated.push({
           id: `${newItem.name
             .toLowerCase()
             .replace(/\s+/g, "-")}-${newItem.variantLabel
@@ -142,24 +136,21 @@ export default function ProductCards() {
       }
     });
 
-    setCartItems(updatedCart);
+    setCartItems(updated);
     setIsModalOpen(true);
 
-    // Reiniciamos las cantidades de esta tarjeta a [0, 0]
     const reset = quantities.map((row, idx) =>
-      idx === prodIndex ? [0, 0] : [...row]
+      idx === pi ? [0, 0] : [...row]
     );
     setQuantities(reset);
   };
 
-  // 9. Eliminar un ítem del carrito
-  const removeItem = (idxToRemove) => {
-    setCartItems((prev) => prev.filter((_, idx) => idx !== idxToRemove));
+  const removeItem = (idx) => {
+    setCartItems((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  // 10. Cálculo simple: número total de ítems en el carrito
   const totalItemsCount = cartItems.reduce(
-    (acc, itm) => acc + itm.quantity,
+    (sum, itm) => sum + itm.quantity,
     0
   );
 
@@ -167,15 +158,15 @@ export default function ProductCards() {
     <>
       {/* Grid de productos */}
       <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mx-auto justify-items-center mt-10">
-        {products.map((prod, prodIndex) => (
+        {products.map((prod, pi) => (
           <Card
             shadow="sm"
-            className="w-[320px] flex flex-col h-full"
+            className="w-[320px] flex flex-col self-start"
             key={prod.id}
             fullWidth={false}
             isPressable={false}
           >
-            {/* Imagen cuadrada 1:1 de 320×320px */}
+            {/* Imagen 1:1 de 320×320px */}
             <CardBody className="flex items-center justify-center overflow-hidden p-0 h-[320px]">
               <Image
                 shadow="sm"
@@ -187,82 +178,80 @@ export default function ProductCards() {
               />
             </CardBody>
 
-            {/* Contenido textual: flex-col justify-between para alinear botón abajo */}
+            {/* Contenido textual: flex-col justify-between */}
             <CardFooter className="flex flex-col justify-between p-4 space-y-3 w-full">
-              {/* Bloque superior: título, descripción y variantes */}
+              {/* Título, descripción con “leer más” y variantes */}
               <div className="space-y-3">
-                {/* Título y descripción */}
                 <div className="space-y-1">
                   <h3 className="font-heading text-lg text-[#1D2021]">
                     {prod.name}
                   </h3>
-                  <p className="font-body text-sm text-neutral-600">
+                  <p
+                    className={`font-body text-sm text-neutral-600 ${
+                      descExpanded[pi]
+                        ? ""
+                        : "overflow-hidden text-ellipsis break-words whitespace-normal"
+                    }`}
+                    style={
+                      descExpanded[pi]
+                        ? {}
+                        : {
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                          }
+                    }
+                  >
                     {prod.description}
                   </p>
+                  <button
+                    onClick={() => {
+                      const copy = [...descExpanded];
+                      copy[pi] = !copy[pi];
+                      setDescExpanded(copy);
+                    }}
+                    className="text-sm text-red-700 hover:underline focus:outline-none"
+                  >
+                    {descExpanded[pi] ? "Mostrar menos" : "Leer más"}
+                  </button>
                 </div>
 
-                {/* Variante 1: flex + nowrap */}
-                <div className="flex justify-between items-center w-full">
-                  <span className="font-body text-sm text-[#1D2021] w-40 whitespace-nowrap">
-                    {prod.variants[0].label} – COP{" "}
-                    {prod.variants[0].price.toLocaleString()}
-                  </span>
-                  <div className="flex items-center border border-red-700 rounded-lg">
-                    <button
-                      onClick={() => handleDecrease(prodIndex, 0)}
-                      className={`px-3 border-r border-red-700 text-center hover:bg-slate-300 rounded-l-lg ${
-                        quantities[prodIndex][0] === 0
-                          ? "opacity-50 cursor-not-allowed"
-                          : ""
-                      }`}
-                    >
-                      –
-                    </button>
-                    <span className="px-4 text-center w-8">
-                      {quantities[prodIndex][0]}
+                {prod.variants.map((variant, vi) => (
+                  <div
+                    className="flex justify-between items-center w-full"
+                    key={variant.label}
+                  >
+                    <span className="font-body text-sm text-[#1D2021] w-40 whitespace-nowrap">
+                      {variant.label} – COP{" "}
+                      {variant.price.toLocaleString()}
                     </span>
-                    <button
-                      onClick={() => handleIncrease(prodIndex, 0)}
-                      className="px-3 border-l border-red-700 text-center hover:bg-slate-300 rounded-r-lg"
-                    >
-                      +
-                    </button>
+                    <div className="flex items-center border border-red-700 rounded-lg">
+                      <button
+                        onClick={() => handleDecrease(pi, vi)}
+                        className={`px-3 border-r border-red-700 text-center hover:bg-slate-300 rounded-l-lg ${
+                          quantities[pi][vi] === 0
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                        }`}
+                      >
+                        –
+                      </button>
+                      <span className="px-4 text-center w-8">
+                        {quantities[pi][vi]}
+                      </span>
+                      <button
+                        onClick={() => handleIncrease(pi, vi)}
+                        className="px-3 border-l border-red-700 text-center hover:bg-slate-300 rounded-r-lg"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                {/* Variante 2: flex + nowrap */}
-                <div className="flex justify-between items-center w-full">
-                  <span className="font-body text-sm text-[#1D2021] w-40 whitespace-nowrap">
-                    {prod.variants[1].label} – COP{" "}
-                    {prod.variants[1].price.toLocaleString()}
-                  </span>
-                  <div className="flex items-center border border-red-700 rounded-lg">
-                    <button
-                      onClick={() => handleDecrease(prodIndex, 1)}
-                      className={`px-3 border-r border-red-700 text-center hover:bg-slate-300 rounded-l-lg ${
-                        quantities[prodIndex][1] === 0
-                          ? "opacity-50 cursor-not-allowed"
-                          : ""
-                      }`}
-                    >
-                      –
-                    </button>
-                    <span className="px-4 text-center w-8">
-                      {quantities[prodIndex][1]}
-                    </span>
-                    <button
-                      onClick={() => handleIncrease(prodIndex, 1)}
-                      className="px-3 border-l border-red-700 text-center hover:bg-slate-300 rounded-r-lg"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
+                ))}
               </div>
 
-              {/* Botón “Agregar a mi pedido” siempre pegado al fondo */}
               <button
-                onClick={() => handleAddToCart(prodIndex)}
+                onClick={() => handleAddToCart(pi)}
                 className="mt-3 text-white bg-red-800 rounded-lg py-2 w-full hover:bg-red-700 transition-colors"
               >
                 Agregar a mi pedido
@@ -272,7 +261,7 @@ export default function ProductCards() {
         ))}
       </div>
 
-      {/* 11. Burbuja fija en esquina inferior izquierda (sólo si hay ítems) */}
+      {/* Burbuja fija en esquina inferior izquierda (solo si hay ítems) */}
       {totalItemsCount > 0 && (
         <button
           onClick={() => setIsModalOpen(true)}
@@ -288,7 +277,6 @@ export default function ProductCards() {
             xmlns="http://www.w3.org/2000/svg"
             className="block"
           >
-            {/* Carrito */}
             <rect
               x="6"
               y="15"
@@ -342,7 +330,6 @@ export default function ProductCards() {
         </button>
       )}
 
-      {/* Modal de carrito */}
       {isModalOpen && (
         <CartModal
           items={cartItems}
