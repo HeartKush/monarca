@@ -254,7 +254,7 @@ export default function ProductCards() {
           className="fixed bottom-4 right-4 z-50 bg-white border border-black text-black p-3 rounded-full shadow-lg hover:scale-110 transform transition-transform focus:outline-none"
           aria-label="Abrir carrito"
         >
-          <Image src="public/assets/icons/cart.svg" alt="Carrito" width={48} height={48} className="block" />
+          <Image src="assets/icons/cart.svg" alt="Carrito" width={48} height={48} className="block" />
           {totalItemsCount > 0 && (
             <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-yellow-400 text-xs font-bold text-black">
               {totalItemsCount}
