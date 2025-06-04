@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 import CartModal from "./CartModal.jsx";
-
 export default function ProductCards() {
-  // 1. Lista de productos con descripción y dos variantes
   const products = [
     {
       id: "longaniza-artesanal",
@@ -39,22 +37,17 @@ export default function ProductCards() {
       ],
     },
   ];
-
-  // 2. Estado de cantidades: [[qtyVar1, qtyVar2], …]
   const [quantities, setQuantities] = useState(
     products.map(() => [0, 0])
   );
 
-  // 3. Estado para manejar descripciones expandidas
   const [descExpanded, setDescExpanded] = useState(
     products.map(() => false)
   );
 
-  // 4. Carrito y control de modal
   const [cartItems, setCartItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 5. Sincroniza cantidades al cerrar el modal
   const syncQuantitiesWithCart = () => {
     const newQuantities = products.map(() => [0, 0]);
     cartItems.forEach((ci) => {
@@ -150,13 +143,11 @@ export default function ProductCards() {
   };
 
   const totalItemsCount = cartItems.reduce(
-    (sum, itm) => sum + itm.quantity,
+    (sum, item) => sum + item.quantity,
     0
   );
-
   return (
     <>
-      {/* Grid de productos */}
       <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mx-auto justify-items-center mt-10">
         {products.map((prod, pi) => (
           <Card
@@ -166,7 +157,6 @@ export default function ProductCards() {
             fullWidth={false}
             isPressable={false}
           >
-            {/* Imagen 1:1 de 320×320px */}
             <CardBody className="flex items-center justify-center overflow-hidden p-0 h-[320px]">
               <Image
                 shadow="sm"
@@ -177,10 +167,7 @@ export default function ProductCards() {
                 src={prod.img}
               />
             </CardBody>
-
-            {/* Contenido textual: flex-col justify-between */}
             <CardFooter className="flex flex-col justify-between p-4 space-y-3 w-full">
-              {/* Título, descripción con “leer más” y variantes */}
               <div className="space-y-3">
                 <div className="space-y-1">
                   <h3 className="font-heading text-lg text-[#1D2021]">
@@ -261,67 +248,13 @@ export default function ProductCards() {
         ))}
       </div>
 
-      {/* Burbuja fija en esquina inferior izquierda (solo si hay ítems) */}
       {totalItemsCount > 0 && (
         <button
           onClick={() => setIsModalOpen(true)}
-          className="fixed bottom-4 left-4 z-50 bg-white border border-black text-black p-3 rounded-full shadow-lg hover:scale-110 transform transition-transform focus:outline-none"
+          className="fixed bottom-4 right-4 z-50 bg-white border border-black text-black p-3 rounded-full shadow-lg hover:scale-110 transform transition-transform focus:outline-none"
           aria-label="Abrir carrito"
         >
-          {/* SVG de carrito con chorizos en negro */}
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="block"
-          >
-            <rect
-              x="6"
-              y="15"
-              width="36"
-              height="21"
-              stroke="#000"
-              strokeWidth="2"
-              fill="none"
-              rx="3"
-              ry="3"
-            />
-            <line
-              x1="6"
-              y1="15"
-              x2="12"
-              y2="9"
-              stroke="#000"
-              strokeWidth="2"
-            />
-            <line
-              x1="42"
-              y1="15"
-              x2="36"
-              y2="9"
-              stroke="#000"
-              strokeWidth="2"
-            />
-            <circle
-              cx="16"
-              cy="39"
-              r="3"
-              stroke="#000"
-              strokeWidth="2"
-              fill="none"
-            />
-            <circle
-              cx="32"
-              cy="39"
-              r="3"
-              stroke="#000"
-              strokeWidth="2"
-              fill="none"
-            />
-          </svg>
-
+          <Image src="public/assets/icons/cart.svg" alt="Carrito" width={48} height={48} className="block" />
           {totalItemsCount > 0 && (
             <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-yellow-400 text-xs font-bold text-black">
               {totalItemsCount}
