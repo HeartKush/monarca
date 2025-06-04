@@ -1,8 +1,8 @@
-// tailwind.config.cjs
-const { nextui } = require("@nextui-org/react");
+import defaultTheme from 'tailwindcss/defaultTheme';
+import { nextui } from "@nextui-org/react";
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",

@@ -1,9 +1,18 @@
 ---
-import Card from "./react/card"
+// Importa React para diagnóstico (no estrictamente necesario, pero se suele declarar)
+import React from "react";
+// Importa tu componente ProductCards (que en realidad está en card.jsx)
+import ProductCards from "./react/card.jsx";
 ---
-<section id="products" class="mt-10 md:w-3/4 xl:w-4/6 2xl:w-7/12 mx-auto text-center">
-
-    <h2 class="text-red-800 text-5xl font-bold">Productos</h2>
-  
-    <Card client:load />
+<section id="productos" class="py-16 bg-white">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="font-heading text-3xl text-[#8D1111] text-center mb-8">
+      Productos
+    </h2>
+    <!-- 
+      Aquí indicamos que Astro debe cargar e hidratar ProductCards 
+      en el cliente (usaremos client:load).
+    -->
+    <ProductCards client:load />
+  </div>
 </section>
